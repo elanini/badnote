@@ -1,39 +1,66 @@
 const express = require('express')
 const app = express()
+const sqlite = require('sqlite');
 
+const dbPromise = sqlite.open('db', { Promise });
+// db.run("CREATE TABLE IF NOT EXISTS posts ( postid TEXT NOT NULL, userid TEXT NOT NULL );")
+
+app.use(async (req, res, next) => {
+    const db = await dbPromise;
+    req.db = db;
+    next()
+})
 
 let posts = {}
 
-app.get('/:postid/:user', function (req, res) {
-    let pid = req.params.postid;
-    if (pid in posts) {
-        res.status(200).send('' + posts[pid].size)
-    } else {
-        res.status(200).send("1337")
-    }
+app.get('/:postid/:user', async function (req, res) {
+    let {user, postid: pid} = req.params;
+    let db = req.db;
+
+    let [cntstmt, existstmt] = await Promise.all([
+        db.prepare("SELECT count(userid) AS cnt FROM posts WHERE postid = ?;"),
+        db.prepare("SELECT EXISTS(SELECT 1 FROM posts WHERE postid = ? AND userid = ?) as voted;")
+    ]);
+
+    let [cntObj, existObj] = await Promise.all([
+        cntstmt.get([pid]),
+        existstmt.get([pid, user])
+    ])
+    cntstmt.finalize()
+    existstmt.finalize()
+
+    res.status(200).send({
+        cnt: cntObj.cnt,
+        voted: existObj.voted == 1 ? true : false,
+    })
 })
 
 
-app.post('/:postid/:user', function (req, res) {
+app.post('/:postid/:user', async function (req, res) {
     let pid = req.params.postid;
     let user = req.params.user;
-    if (pid in posts) {
-        posts[pid].add(user);
-    } else {
-        posts[pid] = new Set([user]);
-    }
-    res.sendStatus(200)
+    let db = req.db;
+
+    
+    let stmt = await db.prepare("INSERT OR IGNORE INTO posts VALUES (?, ?);");
+    stmt.run([pid, user])
+        .then(() => {
+            stmt.finalize()
+            res.sendStatus(200);
+        });
 })
 
-app.delete('/:postid/:user', (req, res) => {
+app.delete('/:postid/:user', async (req, res) => {
     let pid = req.params.postid;
     let user = req.params.user;
-    if (pid in posts) {
-        posts[pid].delete(user);
-        res.sendStatus(200)
-    } else {
-        res.sendStatus(404)
-    }
+    let db = req.db;
+
+    let stmt = await db.prepare("DELETE FROM posts WHERE postid = ? AND userid = ?;")
+    stmt.run([pid, user])
+        .then(() => {
+            stmt.finalize()
+            res.sendStatus(200)
+        })
 })
 
 
