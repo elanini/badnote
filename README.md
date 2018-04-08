@@ -1,4 +1,5 @@
 # Server
 ```
-node server/index.js
+cd server
+node index.js
 ```
