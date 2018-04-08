@@ -35,7 +35,7 @@ async function get_user_status(db, pid, user) {
 exports.start = (name) => {
     const dbPromise = Promise.resolve()
         .then(() => sqlite.open(name, { Promise }))
-        .then(db => db.migrate());
+        .then(db => db.migrate({ force: 'last' }));
 
     app.use((req, res, next) => {
         dbPromise.then((db) => {
