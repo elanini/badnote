@@ -1,5 +1,5 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-	console.log('message received');
+	console.log(request);
 	var xhr = new XMLHttpRequest();
 	xhr.addEventListener("load", function() {
 		console.log(this.responseText);

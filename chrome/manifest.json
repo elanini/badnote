@@ -9,7 +9,8 @@
       "matches": [
         "https://piazza.com/*"
       ],
-      "js": ["jquery-3.3.1.min.js", "content.js"]
+      "js": ["jquery-3.3.1.min.js", "content.js"],
+      "run_at": "document_start"
     }
   ],
   "background": {
