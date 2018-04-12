@@ -15,104 +15,76 @@ function get_user_id() {
 	return uid;
 }
 
-$(document).ready(() => {
+function teacher_div() {
+    return $('#instructor_answer div.post_region_actions.view_mode');
+}
+
+function student_div() {
+    return $('#member_answer div.post_region_actions.view_mode');
+}
+
+function question_div() {
+    return $('#view_question_note_bar');
+}
+
+function add_button_to_elem(elem, address, button_text) {
+    let button_elem = $(`<a class="post_action"  href="#">${button_text}</a>`);
+    let count_elem = $('<span class="post_actions_number"></span>');
+
+    button_elem.click((e) => {
+        chrome.runtime.sendMessage({type: 'POST', address: address}, function(response) {
+            count_elem.text(response.count);
+        });
+    });
+
+    chrome.runtime.sendMessage({type: 'GET', address: address}, function(response) {
+        count_elem.text(response.count);
+    });
+
+    elem.append(
+        // dot separator
+        $('<span class="middot">·</span>'),
+        button_elem,
+        count_elem,
+    );
+}
+
+function add_all_buttons() {
+    console.log("add buttons");
+
 	const postid = get_post_id();
 	console.log(postid);
 
 	const uid = get_user_id();
 	console.log(uid);
 
-	const full_address = `${ADDRESS}/${postid}/${uid}`;
-	console.log(full_address);
+	const address = `${ADDRESS}/${postid}/${uid}`;
+    console.log(address);
 
-	let bad_note_button = $('<a class="post_action"  href="#">bad note</a>');
-	bad_note_button.click((e) => {
-		chrome.runtime.sendMessage({type: 'POST', address: full_address}, function(response) {
-			bad_note_count_elem.text(response.count);
-		});
-	});
-
-	let bad_note_count_elem = $('<span class="post_actions_number"></span>');
-
-	chrome.runtime.sendMessage({type: 'GET', address: full_address}, function(response) {
-		bad_note_count_elem.text(response.count);
-	});
-
-	$('#view_question_note_bar').append(
-		// dot separator
-		$('<span class="middot">·</span>'),
-		bad_note_button,
-		bad_note_count_elem,
-	);
-
-});
-function teacher_div() {
-    return document.querySelector('div#instructor_answer div[class="post_region_actions view_mode"]')
-}
-
-function student_div() {
-    return document.querySelector('div#member_answer div[class="post_region_actions view_mode"]')
-}
-
-function question_div() {
-    return document.getElementById('view_question_note_bar')
-}
-
-function newbutton() {
-    var el = document.createElement("button")
-    var content = document.createTextNode("bad");
-    el.appendChild(content)
-    return el
-}
-
-function handleClick(ev) {
-    console.log(ev)
-}
-
-function add_buttons() {
-    console.log("add buttons")
-    let rows = [
+    add_button_to_elem(
         teacher_div(),
+        address,
+        'no thanks'
+    );
+
+    add_button_to_elem(
         student_div(),
-        question_div()
-    ];
-    for (row of rows) {
-        if (row == null || row == 0) {
-            continue;
-        }
-        let button = newbutton()
-        button.addEventListener("click", handleClick)
-        row.appendChild(button)
-    }
-    // let t = teacher_div()
-    // let s = student_div()
-    // let q = question_div()
-    
+        address,
+        'no thanks'
+    );
+
+    add_button_to_elem(
+        question_div(),
+        address,
+        'bad question'
+    );
 }
 
+$(document).ready(() => {
+    add_all_buttons();
 
-// window.addEventListener('load', function() {
-
-//     let target = document.querySelector('div[data-pats="current_post"');
-//     let config = {childList: true}
-//     let cb = function(muts) {
-//         add_buttons()window.addEventListener('load', function() {
-
-//     let target = document.querySelector('div[data-pats="current_post"');
-//     let config = {childList: true}
-//     let cb = function(muts) {
-//         add_buttons()
-//     }
-//     let observer = new MutationObserver(cb)
-//     observer.observe(target, config)
-
-//     add_buttons()
-
-// }, false);
-//     }
-//     let observer = new MutationObserver(cb)
-//     observer.observe(target, config)
-
-//     add_buttons()
-
-// }, false);
+    let target = document.querySelector('div[data-pats="current_post"');
+    let config = {childList: true};
+    let observer = new MutationObserver(add_all_buttons);
+    observer.observe(target, config);
+});
