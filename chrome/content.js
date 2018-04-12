@@ -63,19 +63,19 @@ function add_all_buttons() {
 
     add_button_to_elem(
         teacher_div(),
-        address,
+        address + '/2',
         'no thanks'
     );
 
     add_button_to_elem(
         student_div(),
-        address,
+        address + '/1',
         'no thanks'
     );
 
     add_button_to_elem(
         question_div(),
-        address,
+        address + '/0',
         'bad question'
     );
 }
