@@ -7,12 +7,12 @@ function get_post_id() {
 }
 
 function get_user_id() {
-	let uid = window.localStorage.getItem('bad_note_uid');
-	if (!uid) {
-		uid = Math.round(Math.random() * Number.MAX_SAFE_INTEGER);
-		window.localStorage.setItem('bad_note_uid', uid);
-	}
-	return uid;
+    let uid = window.localStorage.getItem('bad_note_uid');
+    if (!uid) {
+        uid = Math.round(Math.random() * Number.MAX_SAFE_INTEGER);
+        window.localStorage.setItem('bad_note_uid', uid);
+    }
+    return uid;
 }
 
 function teacher_div() {
@@ -52,13 +52,13 @@ function add_button_to_elem(elem, address, button_text) {
 function add_all_buttons() {
     console.log("add buttons");
 
-	const postid = get_post_id();
-	console.log(postid);
+    const postid = get_post_id();
+    console.log(postid);
 
-	const uid = get_user_id();
-	console.log(uid);
+    const uid = get_user_id();
+    console.log(uid);
 
-	const address = `${ADDRESS}/${postid}/${uid}`;
+    const address = `${ADDRESS}/${postid}/${uid}`;
     console.log(address);
 
     add_button_to_elem(
