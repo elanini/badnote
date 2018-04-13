@@ -1,4 +1,4 @@
-const ADDRESS = 'http://localhost:3000';
+const SERVER_ADDRESS = 'http://localhost:3000';
 
 function get_post_id() {
     let re = /class\/([^?]+)\?cid=(\d+)/;
@@ -27,26 +27,37 @@ function question_div() {
     return $('#view_question_note_bar');
 }
 
-function add_button_to_elem(elem, address, button_text) {
-    let button_elem = $(`<a class="post_action"  href="#">${button_text}</a>`);
+function add_button_to_elem(elem, address, button_text, button_text_undo) {
+    let button_elem = $(`<a class="post_action"  href="#"></a>`);
     let count_elem = $('<span class="post_actions_number"></span>');
 
     button_elem.click((e) => {
-        chrome.runtime.sendMessage({type: 'POST', address: address}, function(response) {
-            count_elem.text(response.count);
-        });
+        if (button_elem.text() == button_text) {
+            chrome.runtime.sendMessage({type: 'POST', address: address}, function(response) {
+                count_elem.text(response.count);
+            });
+            button_elem.text(button_text_undo);
+        }
+        else {
+            chrome.runtime.sendMessage({type: 'DELETE', address: address}, function(response) {
+                count_elem.text(response.count);
+            });
+            button_elem.text(button_text);
+        }
     });
 
     chrome.runtime.sendMessage({type: 'GET', address: address}, function(response) {
         count_elem.text(response.count);
-    });
 
-    elem.append(
-        // dot separator
-        $('<span class="middot">·</span>'),
-        button_elem,
-        count_elem,
-    );
+        button_elem.text(response.voted ? button_text_undo : button_text);
+
+        elem.append(
+            // dot separator
+            $('<span class="middot">·</span>'),
+            button_elem,
+            count_elem,
+        );
+    });
 }
 
 function add_all_buttons() {
@@ -58,25 +69,29 @@ function add_all_buttons() {
     const uid = get_user_id();
     console.log(uid);
 
-    const address = `${ADDRESS}/${postid}/${uid}`;
+    const address = `${SERVER_ADDRESS}/${postid}/${uid}`;
     console.log(address);
 
     add_button_to_elem(
         teacher_div(),
+        // add post type to address
         address + '/2',
-        'no thanks'
+        'no thanks',
+        'undo no thanks'
     );
 
     add_button_to_elem(
         student_div(),
         address + '/1',
-        'no thanks'
+        'no thanks',
+        'undo no thanks'
     );
 
     add_button_to_elem(
         question_div(),
         address + '/0',
-        'bad question'
+        'bad question',
+        'undo bad question'
     );
 }
 
