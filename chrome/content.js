@@ -28,7 +28,7 @@ function question_div() {
 }
 
 function add_button_to_elem(elem, address, button_text, button_text_undo) {
-    let button_elem = $(`<a class="post_action"  href="#"></a>`);
+    let button_elem = $('<a class="post_action"  href="#"></a>');
     let count_elem = $('<span class="post_actions_number"></span>');
 
     button_elem.click((e) => {
@@ -61,16 +61,9 @@ function add_button_to_elem(elem, address, button_text, button_text_undo) {
 }
 
 function add_all_buttons() {
-    console.log("add buttons");
-
     const postid = get_post_id();
-    console.log(postid);
-
     const uid = get_user_id();
-    console.log(uid);
-
     const address = `${SERVER_ADDRESS}/${postid}/${uid}`;
-    console.log(address);
 
     add_button_to_elem(
         teacher_div(),
