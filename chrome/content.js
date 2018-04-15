@@ -24,10 +24,17 @@ function student_div() {
 }
 
 function question_div() {
-    return $('#view_question_note_bar');
+    return $('#question #view_question_note_bar');
 }
 
-function add_button_to_elem(elem, address, button_text, button_text_undo) {
+function note_div() {
+    return $('#note #view_question_note_bar');
+}
+
+function add_button_to_elem(elem, address, button_text, button_text_undo, include_middot) {
+    // if element doesn't exist, do nothing
+    if (!elem.length) return;
+
     let button_elem = $('<a class="post_action"  href="#"></a>');
     let count_elem = $('<span class="post_actions_number"></span>');
 
@@ -51,11 +58,15 @@ function add_button_to_elem(elem, address, button_text, button_text_undo) {
 
         button_elem.text(response.voted ? button_text_undo : button_text);
 
+        if (include_middot) {
+            elem.append(
+                $('<span class="middot">·</span>'),
+            );
+        }
+
         elem.append(
-            // dot separator
-            $('<span class="middot">·</span>'),
             button_elem,
-            count_elem,
+            count_elem
         );
     });
 }
@@ -70,22 +81,34 @@ function add_all_buttons() {
         // add post type to address
         address + '/2',
         'no thanks',
-        'undo no thanks'
+        'undo no thanks',
+        true
     );
 
     add_button_to_elem(
         student_div(),
         address + '/1',
         'no thanks',
-        'undo no thanks'
+        'undo no thanks',
+        true
     );
 
     add_button_to_elem(
         question_div(),
         address + '/0',
         'bad question',
-        'undo bad question'
+        'undo bad question',
+        true
     );
+
+    add_button_to_elem(
+        note_div(),
+        address + '/3',
+        'bad note',
+        'undo bad note',
+        false
+    );
+
 }
 
 $(document).ready(() => {
