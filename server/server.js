@@ -6,7 +6,9 @@ const mung = require('express-mung');
 const port = process.env.PORT || 3000;
 
 function send(res, status, body) {
-    console.log(`< ${status} ${body ? JSON.stringify(body) : ''}`)
+    if (process.env.NODE_ENV !== "production") {
+	console.log(`< ${status} ${body ? JSON.stringify(body) : ''}`)
+    }
     if (body) {
         res.status(status).send(body)
     } else {
@@ -59,10 +61,12 @@ exports.start = async (name) => {
         .then(() => sqlite.open(name, { Promise }))
         .then(db => db.migrate({ force: 'last' }));
 
-    app.use((req, res, next) => {
-        console.log(`> ${req.method} ${req.url} ${req.body ? req.body : ""}`)
-        next()
-    });
+    if (process.env.NODE_ENV !== "production") {
+        app.use((req, res, next) => {
+            console.log(`> ${req.method} ${req.url} ${req.body ? req.body : ""}`)
+            next()
+        });
+    }
 
 
     app.get('/:postid/:user/:posttype', async function (req, res, next) {
@@ -98,7 +102,9 @@ exports.start = async (name) => {
 
 
 
-    app.listen(port, () => console.log('Listening on port ' + port))
+    app.set('trust proxy', true);
+    app.set('trust proxy', 'loopback');
+    app.listen(port, '127.0.0.1', () => console.log('Listening on port ' + port))
     return Promise.resolve()
 }
 
