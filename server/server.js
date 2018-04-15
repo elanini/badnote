@@ -32,6 +32,28 @@ async function get_user_status(db, pid, user, posttype) {
         }
 }
 
+async function get_user_statuses(db, pid, user) {
+        let [cntstmt, existstmt] = await Promise.all([
+            db.prepare("select count(userid) as count, posttype from posts where postid = ? group by posttype;"),
+            db.prepare("SELECT posttype FROM posts WHERE postid = ? AND userid = ? group by posttype;")
+        ]);
+
+        let [cntObj, existObj] = await Promise.all([
+            cntstmt.all([pid]),
+            existstmt.all([pid, user])
+        ])
+        cntstmt.finalize()
+        existstmt.finalize()
+        let results = []
+        cntObj.map((row) => {
+            results.push({
+                ...row,
+                voted: existObj.some(el => el.posttype == row.posttype)
+            })
+        })
+        return results;
+}
+
 exports.start = async (name) => {
     const db = await Promise.resolve()
         .then(() => sqlite.open(name, { Promise }))
@@ -42,12 +64,18 @@ exports.start = async (name) => {
         next()
     });
 
+
     app.get('/:postid/:user/:posttype', async function (req, res, next) {
         let {user, postid: pid, posttype} = req.params;
 
         send(res, 200, await get_user_status(db, pid, user, posttype));
     })
 
+    app.get('/:postid/:user', async function (req, res, next) {
+        let {user, postid: pid, posttype} = req.params;
+
+        send(res, 200, await get_user_statuses(db, pid, user, '*'));
+    })
 
     app.post('/:postid/:user/:posttype', async function (req, res, next) {
         let {user, postid: pid, posttype} = req.params;
