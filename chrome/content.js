@@ -31,7 +31,7 @@ function note_div() {
     return $('#note #view_question_note_bar');
 }
 
-function add_button_to_elem(elem, address, button_text, button_text_undo, include_middot) {
+function add_button_to_elem(elem, address, button_text, button_text_undo, post_type, initial_states) {
     // if element doesn't exist, do nothing
     if (!elem.length) return;
 
@@ -40,35 +40,36 @@ function add_button_to_elem(elem, address, button_text, button_text_undo, includ
 
     button_elem.click((e) => {
         if (button_elem.text() == button_text) {
-            chrome.runtime.sendMessage({type: 'POST', address: address}, function(response) {
+            chrome.runtime.sendMessage({type: 'POST', address: `${address}/${post_type}`}, function(response) {
                 count_elem.text(response.count);
+                button_elem.text(button_text_undo);
             });
-            button_elem.text(button_text_undo);
         }
         else {
-            chrome.runtime.sendMessage({type: 'DELETE', address: address}, function(response) {
+            chrome.runtime.sendMessage({type: 'DELETE', address: `${address}/${post_type}`}, function(response) {
                 count_elem.text(response.count);
+                button_elem.text(button_text);
             });
-            button_elem.text(button_text);
         }
     });
 
-    chrome.runtime.sendMessage({type: 'GET', address: address}, function(response) {
-        count_elem.text(response.count);
+    const index = initial_states.map(e => parseInt(e.posttype)).indexOf(post_type);
+    const state = index != -1 ? initial_states[index] : {count: 0, voted: false};
 
-        button_elem.text(response.voted ? button_text_undo : button_text);
+    count_elem.text(state.count);
+    button_elem.text(state.voted ? button_text_undo : button_text);
 
-        if (include_middot) {
-            elem.append(
-                $('<span class="middot">·</span>'),
-            );
-        }
-
+    // add a dot separator unless the post is a note
+    if (post_type != 3) {
         elem.append(
-            button_elem,
-            count_elem
+            $('<span class="middot">·</span>'),
         );
-    });
+    }
+
+    elem.append(
+        button_elem,
+        count_elem
+    );
 }
 
 function add_all_buttons() {
@@ -76,38 +77,43 @@ function add_all_buttons() {
     const uid = get_user_id();
     const address = `${SERVER_ADDRESS}/${postid}/${uid}`;
 
-    add_button_to_elem(
-        teacher_div(),
-        // add post type to address
-        address + '/2',
-        'no thanks',
-        'undo no thanks',
-        true
-    );
+    chrome.runtime.sendMessage({type: 'GET', address: address}, function(response) {
+        add_button_to_elem(
+            teacher_div(),
+            address,
+            'no thanks',
+            'undo no thanks',
+            0,
+            response
+        );
 
-    add_button_to_elem(
-        student_div(),
-        address + '/1',
-        'no thanks',
-        'undo no thanks',
-        true
-    );
+        add_button_to_elem(
+            student_div(),
+            address,
+            'no thanks',
+            'undo no thanks',
+            1,
+            response
+        );
 
-    add_button_to_elem(
-        question_div(),
-        address + '/0',
-        'bad question',
-        'undo bad question',
-        true
-    );
+        add_button_to_elem(
+            question_div(),
+            address,
+            'bad question',
+            'undo bad question',
+            2,
+            response
+        );
 
-    add_button_to_elem(
-        note_div(),
-        address + '/3',
-        'bad note',
-        'undo bad note',
-        false
-    );
+        add_button_to_elem(
+            note_div(),
+            address,
+            'bad note',
+            'undo bad note',
+            3,
+            response
+        );
+    });
 
 }
 
