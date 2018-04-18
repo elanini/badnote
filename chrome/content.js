@@ -118,6 +118,8 @@ function add_all_buttons() {
 }
 
 $(document).ready(() => {
+    window.setTimeout(add_all_buttons);
+    
     let target = document.querySelector('div[data-pats="current_post"]');
     let config = {childList: true};
     let observer = new MutationObserver(add_all_buttons);
