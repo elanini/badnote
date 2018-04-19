@@ -35,7 +35,10 @@ function add_button_to_elem(elem, address, button_text, button_text_undo, post_t
     // if element doesn't exist, do nothing
     if (!elem.length) return;
 
-    let button_elem = $('<a class="post_action"  href="#"></a>');
+    // if button has already been added, do nothing
+    if ($(`#badnote-${post_type}`).length) return;
+
+    let button_elem = $(`<a class="post_action" id="badnote-${post_type}"  href="#"></a>`);
     let count_elem = $('<span class="post_actions_number"></span>');
 
     button_elem.click((e) => {
@@ -59,8 +62,8 @@ function add_button_to_elem(elem, address, button_text, button_text_undo, post_t
     count_elem.text(state.count);
     button_elem.text(state.voted ? button_text_undo : button_text);
 
-    // add a dot separator unless the post is a note
-    if (post_type != 3) {
+    //add a dot separator if element has any buttons in it 
+    if (elem.has('a').length) {
         elem.append(
             $('<span class="middot">·</span>'),
         );
@@ -118,6 +121,8 @@ function add_all_buttons() {
 }
 
 $(document).ready(() => {
+    window.setTimeout(add_all_buttons);
+    
     let target = document.querySelector('div[data-pats="current_post"]');
     let config = {childList: true};
     let observer = new MutationObserver(add_all_buttons);
