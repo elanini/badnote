@@ -35,7 +35,10 @@ function add_button_to_elem(elem, address, button_text, button_text_undo, post_t
     // if element doesn't exist, do nothing
     if (!elem.length) return;
 
-    let button_elem = $('<a class="post_action"  href="#"></a>');
+    // if button has already been added, do nothing
+    if ($(`#badnote-${post_type}`).length) return;
+
+    let button_elem = $(`<a class="post_action" id="badnote-${post_type}"  href="#"></a>`);
     let count_elem = $('<span class="post_actions_number"></span>');
 
     button_elem.click((e) => {
