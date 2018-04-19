@@ -62,8 +62,8 @@ function add_button_to_elem(elem, address, button_text, button_text_undo, post_t
     count_elem.text(state.count);
     button_elem.text(state.voted ? button_text_undo : button_text);
 
-    // add a dot separator unless the post is a note
-    if (post_type != 3) {
+    //add a dot separator if element has any buttons in it 
+    if (elem.has('a').length) {
         elem.append(
             $('<span class="middot">·</span>'),
         );
