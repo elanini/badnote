@@ -1,7 +1,13 @@
 const express = require('express')
-const app = express()
 const sqlite = require('sqlite');
 const mung = require('express-mung');
+const app = express()
+
+
+app.set('x-powered-by', false);
+app.set('etag', false);
+app.set('trust proxy', true);
+app.set('trust proxy', 'loopback');
 
 const port = process.env.PORT || 3000;
 
@@ -59,7 +65,7 @@ async function get_user_statuses(db, pid, user) {
 exports.start = async (name) => {
     const db = await Promise.resolve()
         .then(() => sqlite.open(name, { Promise }))
-        .then(db => db.migrate({ force: 'last' }));
+        .then(db => db.migrate(process.env.NODE_ENV === "production" ? {} : { force: 'last' }));
 
     if (process.env.NODE_ENV !== "production") {
         app.use((req, res, next) => {
@@ -102,8 +108,6 @@ exports.start = async (name) => {
 
 
 
-    app.set('trust proxy', true);
-    app.set('trust proxy', 'loopback');
     app.listen(port, '127.0.0.1', () => console.log('Listening on port ' + port))
     return Promise.resolve()
 }
