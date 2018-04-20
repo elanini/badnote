@@ -1,4 +1,4 @@
-const SERVER_ADDRESS = 'http://localhost:3000';
+const SERVER_ADDRESS = 'http://107.170.255.236:80';
 
 function get_post_id() {
     let re = /class\/([^?]+)\?cid=(\d+)/;
