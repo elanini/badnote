@@ -1,6 +1,7 @@
 #custom
 db
 .DS_Store
+.env.sh
 
 # Logs
 logs

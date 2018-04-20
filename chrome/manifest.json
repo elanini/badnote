@@ -18,5 +18,11 @@
   },
   "permissions": [
     "http://localhost/*"
-  ]
+  ],
+  "applications": {
+	"gecko": {
+	  "id": "{512c070e-2dc6-487f-945b-f39c850ef92b}",
+	  "strict_min_version": "42.0"
+	}
+  }
 }
