@@ -41,8 +41,8 @@ function add_button_to_elem(elem, address, button_text, button_text_undo, post_t
     let button_elem = $(`<a class="post_action" id="badnote-${post_type}"  href="#"></a>`);
     let count_elem = $('<span class="post_actions_number"></span>');
 
-    button_elem.click((e) => {
-        if (button_elem.text() == button_text) {
+    button_elem.click(() => {
+        if (button_elem.text() === button_text) {
             chrome.runtime.sendMessage({type: 'POST', address: `${address}/${post_type}`}, function(response) {
                 count_elem.text(response.count);
                 button_elem.text(button_text_undo);
@@ -57,7 +57,7 @@ function add_button_to_elem(elem, address, button_text, button_text_undo, post_t
     });
 
     const index = initial_states.map(e => parseInt(e.posttype)).indexOf(post_type);
-    const state = index != -1 ? initial_states[index] : {count: 0, voted: false};
+    const state = index !== -1 ? initial_states[index] : {count: 0, voted: false};
 
     count_elem.text(state.count);
     button_elem.text(state.voted ? button_text_undo : button_text);
