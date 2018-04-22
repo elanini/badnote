@@ -72,7 +72,7 @@ async function get_user_statuses(db, pid, user) {
     existstmt.finalize();
     return cntObj.map(row => ({
         ...row,
-        voted: existObj.some(el => el.posttype == row.posttype)
+        voted: existObj.some(el => el.posttype === row.posttype)
     }));
 }
 
