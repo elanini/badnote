@@ -1,4 +1,4 @@
-const SERVER_ADDRESS = 'http://107.170.255.236:80/badnote';
+const SERVER_ADDRESS = 'http://elanini.com/badnote';
 
 function get_post_id() {
     let re = /class\/([^?]+)\?cid=(\d+)/;

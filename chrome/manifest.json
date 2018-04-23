@@ -1,9 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Bad Note",
-  "version": "0.1",
-   "browser_action": {
-   },
+  "version": "0.1.3",
   "content_scripts": [
     {
       "matches": [
@@ -20,9 +18,16 @@
     "http://localhost/*"
   ],
   "applications": {
-	"gecko": {
-	  "id": "{512c070e-2dc6-487f-945b-f39c850ef92b}",
-	  "strict_min_version": "42.0"
-	}
-  }
+    "gecko": {
+      "id": "{512c070e-2dc6-487f-945b-f39c850ef92b}",
+      "strict_min_version": "42.0"
+    }
+  },
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "homepage_url": "https://github.com/elanini/badnote",
+  "author": "Morgan Grant",
+  "description": "Make Piazza mean"
 }
