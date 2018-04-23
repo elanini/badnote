@@ -2,6 +2,7 @@ Badnote is a browser extension that enhances piazza by adding the ability to sho
 
 # Installation
 [Firefox](https://elanini.com/update/badnote.xpi)
+
 [Chrome](https://elanini.com/update/badnote.crx)
 
 # Server
