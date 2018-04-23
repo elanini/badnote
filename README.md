@@ -10,6 +10,7 @@ Just click the link and it will be added to Firefox :)
 [Click here](https://elanini.com/update/badnote.crx)
 
 - Click the link
+- [Go to the extensions page](chrome://extensions/)
 - Drag downloaded crx file to Chrome window
 - Install
 
