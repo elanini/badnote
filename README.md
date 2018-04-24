@@ -10,7 +10,7 @@ Badnote is a browser extension that enhances piazza by adding the ability to sho
 [Click here](https://elanini.com/update/badnote.xpi) and install.
 
 ### Chrome
-- Click [here](https://elanini.com/update/badnote.crx)
+- [Click here](https://elanini.com/update/badnote.crx)
 - [Go to the extensions page](chrome://extensions/)
 - Drag downloaded crx file to Chrome window
 - Install
