@@ -21,6 +21,8 @@ Extensions are automatically updated.
 ## Implementation
 No Piazza authentication is used. We generate a random number and put it in browser local storage, using it as a user ID. A vote is simply a row in the database with post ID and user ID (and post type - student question, student answer, instructor answer). POST/GET/DELETE for voting and checking the vote. 
 
+Please be nice to the server. Otherwise I'll just turn it off.
+
 We're using ExpressJS as the backend with a simple sqlite database. JQuery and the usual suspects for the extension. 
 
 ### Running the server yourself
