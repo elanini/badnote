@@ -7,22 +7,23 @@ Badnote is a browser extension that enhances piazza by adding the ability to sho
 
 ## Installation
 ### Firefox
-[Click here](https://elanini.com/update/badnote.xpi)
-
-Just click the link and it will be added to Firefox :)
+[Click here](https://elanini.com/update/badnote.xpi) and install.
 
 ### Chrome
-[Click here](https://elanini.com/update/badnote.crx)
-
-- Click the link
+- Click [here](https://elanini.com/update/badnote.crx)
 - [Go to the extensions page](chrome://extensions/)
 - Drag downloaded crx file to Chrome window
 - Install
 
 ## Updating
-Extensions are automatically updated
+Extensions are automatically updated.
 
-## Running the server yourself
+## Implementation
+No Piazza authentication is used. We generate a random number and put it in browser local storage, using it as a user ID. A vote is simply a row in the database with post ID and user ID (and post type - student question, student answer, instructor answer). POST/GET/DELETE for voting and checking the vote. 
+
+We're using ExpressJS as the backend with a simple sqlite database. JQuery and the usual suspects for the extension. 
+
+### Running the server yourself
 Requires node 9.x
 
 To run:
