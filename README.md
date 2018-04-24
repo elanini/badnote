@@ -14,7 +14,10 @@ Just click the link and it will be added to Firefox :)
 - Drag downloaded crx file to Chrome window
 - Install
 
-# Server
+# Updating
+Extensions are automatically updated
+
+# Running the server yourself
 Requires node 9.x
 
 To run:
