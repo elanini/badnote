@@ -27,3 +27,5 @@ npm install
 node index.js
 ```
 
+# Disclaimer
+This extension and the people who wrote it are in no way affiliated with Piazza.
