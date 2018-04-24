@@ -1,18 +1,24 @@
 {
   "manifest_version": 2,
   "name": "Bad Note",
-  "version": "0.1.5",
+  "version": "0.1.9",
+  "update_url": "https://elanini.com/update/updates.xml",
   "content_scripts": [
     {
       "matches": [
         "https://piazza.com/class*"
       ],
-      "js": ["jquery-3.3.1.min.js", "content.js"],
+      "js": [
+        "jquery-3.3.1.min.js",
+        "content.js"
+      ],
       "run_at": "document_start"
     }
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js"
+    ]
   },
   "permissions": [
     "http://localhost/*"
